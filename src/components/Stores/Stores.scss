@@ -1,4 +1,7 @@
 @media only screen and (min-width: 750px) {
+  .storeWrapper {
+    cursor: pointer;
+  }
   .storeInput{
     width:70%;
   }
@@ -25,7 +28,7 @@
   }
 
   .allStores{
-    padding-top: 140px;
+
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     grid-gap: 10px;
@@ -34,10 +37,17 @@
 
   }
   .StoreWrapperHeader {
-    position: absolute;
-    /* width: 100%; */
-    background-color: white;
-    padding-top: 30px;
+    border-radius: 10px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin-left: 25%;
+    padding: 20px;
+    .storeSearch {
+      width: 100%;
+    }
   }
 
   .storeResults{

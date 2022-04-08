@@ -82,7 +82,7 @@ def login(event):
     }
 
 def handleStores(event):
-    store_to_search = event['pathParameters']['store'].lower()
+    store_to_search = event['pathParameters']['stores'].lower()
     data_to_return = []
     addresses = ["Toutes les boutiques"]
     stores = scanRecursive("storeDB")
@@ -115,6 +115,10 @@ def register(event):
             UserPoolId=USER_POOL_ID,
             Username=username,
         )
+        client = boto3.resource('dynamodb')
+        table = client.Table("Favorites")
+        table.put_item(Item={"email": username, "userType": user_type, "favorite_store": [], "favorite_food": [] })
+
     except client.exceptions.UsernameExistsException as e:
         return {
             'error': True, 
@@ -178,7 +182,8 @@ def create_shop(event):
         "city": body_parsed['city'],
         "address": body_parsed['address'],
         "products": [],
-        "categories": []
+        "categories": [],
+        "coordinates": body_parsed['coordinates']
     })
     return get_shops_from_user(event)
 
@@ -209,11 +214,13 @@ def get_categories(event):
     return store['categories']
 
 def create_category(event):
+    print("ici")
     client = boto3.resource('dynamodb')
     table = client.Table("storeDB")
     body_parsed = json.loads(event['body'])
     body_parsed['img'] = handle_img(body_parsed['img'])
     store_to_modify = get_store(event)
+    print("store_to_modify", store_to_modify)
     store_to_modify['categories'].append(body_parsed)
     delete_store(event)
     table.put_item(Item=store_to_modify)
@@ -241,7 +248,7 @@ def create_product(event):
     client = boto3.resource('dynamodb')
     table = client.Table("storeDB")
     body_parsed = json.loads(event['body'])
-    params_needed = ["Ingredients", "Price", "Labels", "Name"]
+    params_needed = ["Ingredients", "Price", "Labels", "Name", "Category"]
     for param in params_needed:
       if param not in body_parsed:
           return "Error: Missing parameter " + param
@@ -272,13 +279,41 @@ def delete_product(event):
     delete_store(event)
     table.put_item(Item=store_to_modify)
     return get_store(event)
+
+def add_favorites(event):
+    client = boto3.resource('dynamodb')
+    table = client.Table("Favorites")
+    body_parsed = json.loads(event['body'])
+    column = "favorite_store"
+    data = ""
+    user_favorites = table.get_item(Key={'email': event['pathParameters']['user_id']})['Item']
+    if 'favorite_store' in body_parsed:
+        column = "favorite_store"
+        data = {"store_name": body_parsed['favorite_store'], "img": body_parsed['img']}
+    else:
+        column = "favorite_food"
+        data = {'product_name' : body_parsed['favorite_food'], 'store_id': body_parsed['store_id'], "img": body_parsed['img']}
+    user_favorites[column].append(data)
+    table.put_item(Item=user_favorites)
+    return user_favorites
+
+def get_user_favorites(event):
+    client = boto3.resource('dynamodb')
+    table = client.Table("Favorites")
+    user_favorites = table.get_item(Key={'email': event['pathParameters']['user_id']})['Item']
+    return user_favorites
     
 def handle_paths(event):
     httpMethod = event['httpMethod']
     resource = event['resource']
     path = httpMethod + resource
+    print(path)
     switcher = {
-        'GET/stores/{store}': lambda: handleStores(event),
+        'GET/stores': lambda: scanRecursive("storeDB"),
+        'GET/stores/{stores}': lambda: handleStores(event),
+        'PATCH/users/{user_id}': lambda: add_favorites(event),
+        'GET/users/{user_id}': lambda: get_user_infos(event['pathParameters']['user_id']),
+        'GET/users/{user_id}/favorites': lambda: get_user_favorites(event),
         'POST/login': lambda: login(event),
         'POST/register': lambda: register(event),
         'GET/users/{user_id}/shops': lambda: get_shops_from_user(event),
@@ -301,8 +336,10 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "headers": {
-          "Access-Control-Allow-Origin" : '*',
-          "Access-Control-Allow-Credentials" : True
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Credentials' : True,
+            'Access-Control-Allow-Methods': '*',
+            'Access-Control-Allow-Headers' : 'Access-Control-Allow-Origin, Authorization, X-Custom-Header, Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers'
         },
         "body": json.dumps(response),
     }

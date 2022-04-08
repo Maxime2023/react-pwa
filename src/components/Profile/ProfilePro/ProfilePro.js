@@ -1,5 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState, useRef, useEffect } from 'react';
+import axios from 'axios';
+import {data} from './Data'
+import './ProfilePro.scss'
 import {Input} from "antd"
 import './ProfilePro.scss'
 import Modal from "react-bootstrap/Modal";
@@ -9,95 +11,240 @@ import 'antd/dist/antd.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { LoadingOutlined,} from '@ant-design/icons';
+import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
+
 const { Option } = Select;
 
-
-
-const openNotification = (type) => {
-    notification.open({
-      message: type,
-      description:
-        type + ' succeed',
-        style: {zIndex: 99999999},
-      onClick: () => {
-        console.log('Notification Clicked!');
-      },
-    });
-  };
-
 const ProfilePro = () => {
-    const ref = useRef
-    const [showAddShopModal, setShowAdddShopModal] = useState(false);
-    const [showModifyModalCategory, setShowModifyModalCategory] = useState(false)
-    const [inputAddress, setInputAddress] = useState("");
-    const [resultsAddress, setResultsAdress] = useState([]);
-    const [areSuggestionsOpen, setAreSuggestionsOpen] = useState(false);
-    const [inputName, setInputName] = useState("");
-    const [coordinates, setCoordinates] = useState([]);
-    const [city, setCity] = useState([]);
-    const [type, setType] = useState("Boulangerie");
-    const [userShops, setUserShops] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedShop, setSelectedShop] = useState("");
-    const [shopCategories, setShopCategories] = useState([]);
-    const [shopProducts, setShopProducts] = useState([]);
-    const [inputCategoryName, setInputCategoryName] = useState("");
-    const [inputProductName, setInputProductName] = useState("");
-    const [menu, setMenu] = useState("Categories")
-    const [selectedCategory, setSelectedCategory] = useState("")
+    const [userShops, setUserShops] = useState([]);
+    const [selectedStore, setSelectedStore] = useState("");
+    const [selectedType, setSelectedType] = useState("Boulangerie");
+    const [resultAdrresses, setResultAddresses] = useState([]);
+    const [isAddressSelected, setIsAddressSelected] = useState(false);
+    const [coordinates, setCoordinates] = useState([]);
+    const [city, setCity] = useState("")
+
+    const [isAddStoreModalShown, setIsAddStoreModalShown] = useState(false);
+    const [storeAddress, setStoreAddress] = useState("");
+    const [storeName,setStoreName] = useState("");
+
+    const [isModifyStoreModalShown, setIsModifyStoreModalShown] = useState(false);
+    const [selectedMenu, setSelectedMenu] = useState("Category");
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedProduct, setSelectedProduct] = useState("");
+
+    const [globalLoading, setGlobalLoading] = useState(false)
+
+    const [input, setInput] = useState("");
+    const [inputIngredient, setInputIngredient] = useState("")
+    const [inputLabel, setInputLabel] = useState("")
 
     useEffect(() => {
-        console.log("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops")
+        // setUserShops(data)
+        console.log(data)
         axios.get("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops")
         .then(res => {
+            console.log("axios UserShops")
             console.log(res.data)
             setUserShops(res.data)
         })
-
-        const checkIfClickedOutside = e => {
-            if (areSuggestionsOpen && ref.current && !ref.current.contains(e.target)) {
-                areSuggestionsOpen(false)
-            }
-        }
-        document.addEventListener("mousedown", checkIfClickedOutside)
-
-        return () => {
-          document.removeEventListener("mousedown", checkIfClickedOutside)
-        }
     }, [])
 
-    function handleChange(value) {
-        setType(value)
-      }
-
-    const searchAddressGouv = (value) => {
-        setAreSuggestionsOpen(true)
-        setInputAddress(value)
-        axios.get("https://api-adresse.data.gouv.fr/search/?q="+ value)
+    const createCategory = (storeId) => {
+        setGlobalLoading(true)
+        let data = {
+            "name": input,
+            "img": "image"
+        }
+        axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id")  + "/shops/" + selectedStore.ID + "/categories", data)
         .then(res => {
             console.log(res.data)
-            setResultsAdress(res.data)
+            setGlobalLoading(false)
+            setSelectedStore(res.data)
         })
-        if (value[value.length - 1] === " ") {
-            console.log("sdfdsf")
+    }
 
+    const createProduct = (storeId) => {
+        console.log("laaa")
+        console.log("input", input)
+        setGlobalLoading(true)
+        let data = {
+            "Name": input,
+            "Ingredients": [],
+            "Price": "2.50",
+            "Labels": [],
+            "Category": selectedCategory.name
         }
-    }
-    const clickToSelectShop = (shop) => {
-        console.log("clickToSelectShop", shop)
-        setSelectedShop(shop)
-        setMenu("Categories")
-        axios.get("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") +"/shops/" + shop.ID + "/categories")
+        axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops/" + selectedStore.ID + "/products", data)
         .then(res => {
-            setShopCategories(res.data)
-            setShowModifyModalCategory(true)
+            console.log(res.data)
+            setInput("")
+            setGlobalLoading(false)
+            setSelectedStore(res.data)
         })
+    }
+
+    const createIngredient = () => {
+        setGlobalLoading(true)
+        let data = {
+            "ingredient": inputIngredient,
+        }
+        console.log(selectedStore.ID)
+        console.log(selectedProduct.ID)
+        console.log()
+        axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops/" + selectedStore.ID + "/products/" + selectedProduct.ID + "/ingredients", data)
+        .then(res => {
+            console.log(res.data)
+            setInput("")
+            setGlobalLoading(false)
+            setSelectedStore(res.data)
+        })
+    }
+
+    const deleteIngredient = (ingredient) => {
+        setGlobalLoading(true)
+        axios.delete("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops/" + selectedStore.ID + "/products/" + selectedProduct.ID + "/ingredients/" + ingredient)
+        .then(res => {
+            console.log(res.data)
+            setInput("")
+            setGlobalLoading(false)
+            setSelectedStore(res.data)
+        })
+    }
+
+    const deleteItem = (name) => {
+        setGlobalLoading(true)
+        axios.delete("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/"+ localStorage.getItem("user_id")  +"/shops/"+ selectedStore.ID +"/categories/" + name)
+        .then (res => {
+            console.log(res.data)
+            setInput("")
+            setGlobalLoading(false)
+            setSelectedStore(res.data)
+        })
+    }
+
+    const deleteProduct = (productId) => {
+        setGlobalLoading(true)
+        axios.delete("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/"+ localStorage.getItem("user_id")  +"/shops/"+ selectedStore.ID +"/products/" + productId)
+        .then (res => {
+            console.log(res.data)
+            setInput("")
+            setGlobalLoading(false)
+            setSelectedStore(res.data)
+        })
+    }
+
+    const mapProductInfos = () => {
+        if (selectedProduct === "") {
+            return <div>{LoadingOutlined}</div>
+        }
+        let product = selectedStore.products.find(x => x.Name === selectedProduct.Name);
+        let ingredients = product.Ingredients.map(ingredient => <div className='data'>              <div className='txt'>  {ingredient}</div>
+        <div className='logoWrapper'> <DeleteIcon onClick={() => deleteIngredient(ingredient)}/></div></div>)
+        let labels = product.Labels.map(label => <div className='data'>              <div className='txt'>  {label}</div>
+        <div className='logoWrapper'> <DeleteIcon/></div></div>)
+        return (
+            <div>
+                <div className='inputWrapperBtn'>
+                    <div className='inputWrapper'>
+                        <input value={inputIngredient} onChange={(e) => setInputIngredient(e.target.value)} placeholder='Ajouter un ingredient' className='input'/>
+                    </div>
+                    <div className='btnWrapper'>
+                        <button className='btn' onClick={() => createIngredient()}><AddCircleIcon/></button>
+                    </div>
+                </div>
+                {ingredients}
+                <div className='inputWrapperBtn'>
+                    <div className='inputWrapper'>
+                        <input value={inputLabel} onChange={(e) => setInputLabel(e.target.value)}   placeholder='Ajouter un label' className='input'/>
+                    </div>
+                    <div className='btnWrapper'>
+                        <button className='btn' ><AddCircleIcon/></button>
+                    </div>
+                </div>
+                {labels}
+            </div>
+        )
 
     }
-    const mapStore = () => {
-        return userShops.map(store=>
-            <div key={store.ID} onClick={()=> clickToSelectShop(store)}>
-                <Store data={store}/>
+
+
+    const mapProducts = () => {
+        
+        let productsTorender = []
+        for (let i = 0; i < selectedStore.products.length; i++) {
+            if (selectedStore.products[i].Category === selectedCategory.name) {
+                productsTorender.push(selectedStore.products[i])
+            }
+        }
+        let products = productsTorender.map(product => 
+            <div className='data' >
+                <div className='txt' onClick={() => {setSelectedProduct(product) ;setSelectedMenu("ProductInfos")}}>  {product.Name}</div>
+                <div className='logoWrapper' onClick={() => deleteProduct(product.ID)}> <DeleteIcon/></div>
+               
+            </div> 
+        )
+        return (
+            <div>
+                <div className='inputWrapperBtn'>
+                    <div className='inputWrapper'>
+                        <input onChange={(e) => setInput(e.target.value)} value={input}  placeholder='Créer un produit' className='input'/>
+                    </div>
+                    <div className='btnWrapper'>
+                        <button className='btn' onClick={() => createProduct()}><AddCircleIcon/></button>
+                    </div>
+                </div>
+                {products}
+            </div>
+        )
+    }
+
+    const mapCategories = () => {
+        console.log(selectedStore)
+        if (selectedStore === "") {
+            return <div>{LoadingOutlined}</div>
+        }
+        let categories = selectedStore.categories.map(category => 
+            <div  className='data'>              <div onClick={() => onClickCategory(category)} className='txt'>  {category.name}</div>
+            <div className='logoWrapper' onClick={() => deleteItem(category.name)}> <DeleteIcon/></div></div>
+        )
+
+        return (
+            <div>
+                <div className='inputWrapperBtn'>
+                    <div className='inputWrapper'>
+                        <input value={input} onChange={(e) => setInput(e.target.value)} placeholder='Créer une catégorie' className='input'/>
+                    </div>
+                    <div className='btnWrapper'>
+                        <button className='btn' onClick={() => createCategory()}><AddCircleIcon/></button>
+                    </div>
+                </div>
+                {categories}
+            </div>
+        )
+    }
+
+    const onClickCategory = (category) => {
+        setSelectedMenu("Products")
+        setSelectedCategory(category)
+    }
+
+    const onClickStore  = (store) => {
+        setSelectedStore(store);
+        setSelectedMenu("Category")
+        setIsModifyStoreModalShown(true);
+    }
+
+    const mapUserStores = () => {
+        return userShops.map(shop => 
+            <div className='storeWrapper' onClick={() => onClickStore(shop)}>
+                <div className='name'>
+                    {shop.name}
+                </div>
+                <div className='imgWrapper'>
+                    <img className='img' src={shop.img}/>
+                </div>
             </div>
         )
     }
@@ -107,216 +254,151 @@ const ProfilePro = () => {
         return values.map(value => <Option value={value}>{value}</Option>)
     }
 
+    const handleMenus = () => {
+        if (globalLoading) {
+            return <div className='loadingWrapper'><LoadingOutlined style={{fontSize: "100px", color: "#ff9580"}}/></div> 
+        }
+        if (selectedMenu === "Category") {
+            return mapCategories()
+        }
+        else if (selectedMenu === "Products") {
+            return mapProducts()
+        }
+        else {
+            return mapProductInfos()
+        }
+    }
+
     const createNewShop = () => {
         setIsLoading(true)
         let body = {
-            "name": inputName,
-            "store": type,
+            "name": storeName,
+            "store": selectedType,
             "city": city,
-            "address": inputAddress,
-            "coordinates": coordinates
+            "address": storeAddress,
+            "coordinates": [coordinates[0].toString(), coordinates[1].toString()]
         }
         axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops", body)
-        .then ( res => {
-            axios.get("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops")
-            .then(res => {
-                console.log(res.data)
-                setUserShops(res.data)
-                setIsLoading(false)
-            })
+        .then (res => {
+            setIsLoading(false);
+            setUserShops(res.data)
+            console.log(res.data)
         })
     }
 
-    const addShopModal = () => {
+    const searchAddressGouv = (value) => {
+        setIsAddressSelected(false)
+        setStoreAddress(value)
+        console.log("sdfsdf", value)
+        axios.get("https://api-adresse.data.gouv.fr/search/?q="+ value)
+        .then(res => {
+
+            console.log(res.data)
+            setResultAddresses(res.data.features)
+        })
+    }
+
+    const AddressesMap = () => {
+        if (isAddressSelected === true || storeAddress === "") {
+            return
+        }
+        let resultAddress =  resultAdrresses.map(address => 
+            <div onClick={() => {setStoreAddress(address.properties.label); setIsAddressSelected(true); setCoordinates(address.geometry.coordinates); setCity(address.properties.city)}} >
+                {address.properties.label}
+            </div>
+        )
         return (
-            <Modal show={showAddShopModal} onHide={() => setShowAdddShopModal(false)} className='addShopModal'>
+            <div className='suggestions'>
+                {resultAddress}
+            </div>
+        )
+    }
+
+    const addShopModal = () => {
+
+        return (
+            <Modal show={isAddStoreModalShown} onHide={() => setIsAddStoreModalShown(false)} className='addShopModal'>
                 <Modal.Header className='modalHeaderCreateShop'>
                     Créer une boutique
-                    <button type="button" style={{color: "white"}} class="close" data-dismiss="modal" aria-label="Close" onClick={() => setShowAdddShopModal(false)}>
+                    <button type="button" style={{color: "white"}} class="close" data-dismiss="modal" aria-label="Close" onClick={() => setIsAddStoreModalShown(false)}>
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </Modal.Header>
                 <div className='dataWrapperAddShop'>
                     Entrez le nom de votre boutique : 
                     <div className='inputWrapper'>
-                        <Input className='inputSearchAddress' placeholder={"Ex: Boulangerie Masséna"}  onChange={(e) => setInputName(e.target.value)}/>
+                        <Input className='inputSearchAddress' value={storeName} onChange={(e) => setStoreName(e.target.value)} placeholder={"Ex: Boulangerie Masséna"} />
                     </div>
                 </div>
                 <div className='dataWrapperAddShop'>
                     Entrez l'adresse de votre boutique : 
                     <div className='inputWrapper'>
-                        <Input value={inputAddress} className='inputSearchAddress' placeholder={"Ex: 208 place sophie lafitte"}  onChange={(e) => searchAddressGouv(e.target.value)}/>
+                        <Input  className='inputSearchAddress' value={storeAddress} onChange={(e) => searchAddressGouv(e.target.value)} placeholder={"Ex: 208 place sophie lafitte"} />
                     </div>
+                    <div >
+                    {AddressesMap()}
+                    </div>
+                 
                 </div>
-                {mapAddresses()}
+                {/* {mapAddresses()} */}
                 <div className='dataWrapperAddShop'>
                     Selectionnez le type de votre boutique:
-                <Select defaultValue="Boulangerie" style={{ width: "100%", marginTop: "10px", }} onChange={handleChange}>
+                <Select onSelect={(e) => setSelectedType(e)} defaultValue="Boulangerie" style={{ width: "100%", marginTop: "10px", }} >
                     {mapSelect()}
                 </Select>
                 </div>
                 <div className='dataWrapperAddShop'>
-                <button className='btnCreateStore' onClick={() => createNewShop()}>
+                <button className='btnCreateStore' onClick={() => createNewShop()} >
                     {isLoading ? <LoadingOutlined style={{fontSize: "22px"}}/> : "Créer la boutique"}
                 </button>
                 </div>
             </Modal>
         )
     }
-    const deleteCategory = (category) => {
-        console.log(category)
-        axios.delete("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") +"/shops/" + selectedShop.ID + "/categories/" + category.name)
-        .then(res => {
-            setShopCategories(res.data)
-        })
+
+    const backBtn = () => {
+        if (selectedMenu === "Category") {
+            setIsModifyStoreModalShown(false)
+        }
+        else if (selectedMenu === "Products") {
+            setSelectedMenu("Category")
+        }
+        else  {
+            setSelectedMenu("Products")
+        }
+
     }
 
-    const handleClickOnCategories = (category) => {
-        setMenu("Products");
-        setSelectedCategory(category)
-    }
-    const mapCategories = () => {
-        if (selectedShop === "") {
-            return
-        }
-        if (shopCategories.length === 0) {
-            return
-        } 
-        return shopCategories.map(category => <div className='categoryWrapper'>
-            <div className='editCategoryName' onClick={() => handleClickOnCategories(category)}>
-            {category.name}
-            </div>
-            <div className='editCategoryBtnDelete' onClick={() => deleteCategory(category)}>
-            <DeleteIcon/>
-            </div>
-        </div>)
-    }
-
-    const mapProducts = () => {
-        if (selectedShop === "" ) {
-            return
-        }
-        let productsToShow = [];
-        for (let i = 0; i < selectedShop.products.length; i++) {
-            console.log(selectedShop.products[i].Category, selectedCategory.name)
-            if (selectedShop.products[i].Category === selectedCategory.name) {
-                productsToShow.push(selectedShop.products[i])
-            }
-        }
-        console.log('productsToShow', productsToShow)
-        return productsToShow.map(product => <div className='categoryWrapper'>
-            <div className='editCategoryName' onClick={() => setMenu("ProductInfos")}>
-            {product.Name}
-            </div>
-            <div className='editCategoryBtnDelete' onClick={() => deleteCategory(product)}>
-            <DeleteIcon/>
-            </div>
-        </div>)
-    }
-
-    const CreatenewCategoryforShop = () => {
-        setIsLoading(true)
-        console.log(selectedShop.ID)
-        console.log(localStorage.getItem("user_id"))
-        console.log("inputCategoryName" ,inputCategoryName)
-  
-        let body = {
-            "name": inputCategoryName,
-            "img": "image",
-        }
-        axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") +"/shops/" + selectedShop.ID + "/categories", body)
-        .then(res => {
-            setShopCategories(res.data)
-            console.log(res.data)
-            let tmp = selectedShop
-            setIsLoading(false)
-        })
-    }
-
-    const CreateNewProduct = () => {
-        let data = {
-            "Name": inputProductName,
-            "Ingredients": [],
-            "Price": "2.50",
-            "Labels": []
-        }
-        axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") +"/shops/" + selectedShop.ID + "/products", data)
-        .then( res => {
-            console.log(res.data)
-        })
-    }
-
-    const handleAllCategories = () => {
-        if (menu === "Categories") {
-            return (
-                <div className='dataWrapperAddShop'>
-                Mes categories : 
-                {mapCategories()}
-                <div className='addCategoryInputBtnWrapper'>
-                    <Input className='addCategoryInput' placeholder='Ajouter une catégorie' onChange={(e) => setInputCategoryName(e.target.value)}/>
-                    <button className='addCategoryBtn' onClick={() => CreatenewCategoryforShop()}>{ isLoading ? <LoadingOutlined/> :  <AddCircleIcon/>}</button>
-                </div>
-            </div>
-            )
-        }
-        if (menu === "Products") {
-            return (
-                <div className='dataWrapperAddShop'>
-                Mes produits : 
-                {mapProducts()}
-                <div className='addCategoryInputBtnWrapper'>
-                    <Input className='addCategoryInput' placeholder='Ajouter un produit' onChange={(e) => setInputProductName(e.target.value)}/>
-                    <button className='addCategoryBtn' onClick={() => CreateNewProduct()}><AddCircleIcon/></button>
-                </div>
-            </div>
-            )
-        }
-    }
-
-    const modifyStoreCategory = () => {
+    const modifyStoreModal = () => {
         return (
-            <Modal show={showModifyModalCategory} onHide={() => setShowModifyModalCategory(false)} style={{width: "100%", minHeight: "100vh" }}>
+            <Modal show={isModifyStoreModalShown} onHide={() => setIsModifyStoreModalShown(false)} className='addShopModal'>
                 <Modal.Header className='modalHeaderCreateShop'>
-                    Modifier ma boutique
-                    <button type="button" style={{color: "white"}} class="close" data-dismiss="modal" aria-label="Close" onClick={() => setShowModifyModalCategory(false)}>
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                    <button className='goBackBtnModify' onClick={() => backBtn()}><ArrowCircleLeftIcon style={{marginRight: "20px"}}/> Retour</button>
+                    <div className='txt'>                        
+                    Modifier une boutique
+                    </div>
                 </Modal.Header>
-               {handleAllCategories()}
+               {handleMenus()}
             </Modal>
         )
-    }
-
-    const handleClickAddress = (address, coordinates) => {
-        setInputAddress(address.properties.label);
-        setCoordinates([coordinates[0].toString(), coordinates[1].toString()])
-        setAreSuggestionsOpen(false)
-        setCity(address.properties.city)
-    }
-
-    const mapAddresses = () => {
-        console.log("areSuggestionsOpen ==> ", areSuggestionsOpen)
-        if (resultsAddress.length === 0 || !areSuggestionsOpen) return;
-        return (
-            <div className='suggestions' >
-                {
-                resultsAddress.features.map(address => <div onClick={() => handleClickAddress(address, address.geometry.coordinates)}>{address.properties.label}</div>)
-                }
-            </div>
-            )
     }
 
     return (
         <div className='ProfileProWrapper'>
             {addShopModal()}
-            {modifyStoreCategory()}
-            <button className='AddStoreBtnProfile' onClick={() => setShowAdddShopModal(true)}>
-                Ajouter une boutique&nbsp;&nbsp;<AddCircleIcon/>
-            </button>
-            <div className='mapStoresWrapper'>
-            {mapStore()}
+            {modifyStoreModal()}
+            <div className='ProfileProWrapperButton'>
+                <button className='AddStoreBtnProfile' onClick={() => setIsAddStoreModalShown(true)}>
+                    Ajouter une boutique&nbsp;&nbsp;<AddCircleIcon/>
+                </button>
+                <button className='AddStoreBtnProfile' onClick={() => setIsAddStoreModalShown(true)}>
+                    Se deconnecter&nbsp;&nbsp;<AddCircleIcon/>
+                </button>
             </div>
-    
+
+            <div className='mapStoresWrapper'>
+                {mapUserStores()}
+            </div>
         </div>
     )
 }

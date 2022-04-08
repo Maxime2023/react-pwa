@@ -12,6 +12,7 @@
         padding: 20px;
         padding-bottom: 100px;
     }
+
     .btnCreateStore {
         width: 90%;
         border: none;
@@ -92,24 +93,106 @@
 }
 
 @media only screen and (min-width: 750px) {
+    .ProfileProWrapperButton {
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .AddStoreBtnProfile {
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        border-radius: 5px;
+        background-color: #ff9580;
+        color: white;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        width: 20%;
+        margin: 10px;
+        // width: 40%;
+        // margin-left: 30%;
+    }
+    .loadingWrapper {
+        height: 500px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .inputWrapperBtn {
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .inputWrapper {
+            width: 80%;
+            height: 50px;
+            display: flex;
+            .input {
+                border: 2px solid darkgray;
+                border-radius: 10px;
+                width: 100%;
+                text-align: center;
+            }
+        }
+        .btnWrapper {
+            height: 50px;
+            display: flex;
+            width: 30%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            .btn {
+                background-color: #ff9580;
+                color: white;
+            }
+        }
+    }
+
+    .data {
+        background-color: whitesmoke;
+        padding: 10px;
+        margin: 5px;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .txt {
+            width: 80%;
+        }
+        .logoWrapper {
+            width: 20%;
+        }
+    }
    .ProfileProWrapper {
        padding-top: 60px;
-
    }
-   .AddStoreBtnProfile {
+   .modalHeaderCreateShop {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       font-size: 16px;
+       .txt {
+           width: 50%;
+           text-align: center;
+
+       }
+   }
+   .goBackBtnModify {
        border: none;
-       cursor: pointer;
-       padding: 10px;
        border-radius: 5px;
+       padding: 10px;
+       width: 50%;
+       margin: 10px;
        background-color: #ff9580;
        color: white;
        display: flex;
-       flex-direction: row;
        justify-content: center;
        align-items: center;
-       width: 40%;
-       margin-left: 30%;
    }
+
    .modal-content {
     padding-top: 60px !important;
    
@@ -144,22 +227,53 @@
         font-size: 13px;
         color: #a4a4a4;
         text-align: center;
-        border-radius: 10px;
         box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
         padding: 5px;
-        width: 90%;
-        margin-left: 5%;
         border-radius: 10px;
-        margin-top: 250px;
+        width: 92%;
+        > div {
+            padding: 10px;
+            cursor: pointer;
+        }
+
     }
     .mapStoresWrapper {
         display: grid;
         grid-template-columns: repeat(4, 1fr);
         grid-gap: 10px;
         padding: 20px;
+        .storeWrapper:hover {
+            background-color: #ff9580;
+            .name {
+                color: white;
+                padding: 20px;
+
+            }
+        }
+        .storeWrapper {
+            height: 200px;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            cursor: pointer;
+            box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+            .name {
+                color: #ff9580;
+                padding: 20px;
+
+            }
+            .imgWrapper {
+                .img {
+                    height: 60px;
+                }
+            }
+        }
     }
+
     .categoryWrapper {
         display: flex;
+        cursor: pointer;
         background-color: whitesmoke;
         padding: 10px;
         border-radius: 10px;
