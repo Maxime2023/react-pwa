@@ -36,9 +36,10 @@ const ProfilePro = () => {
     const [globalLoading, setGlobalLoading] = useState(false)
 
     const [input, setInput] = useState("");
-    const [inputIngredient, setInputIngredient] = useState("")
-    const [inputLabel, setInputLabel] = useState("")
-    const [inputUrlImg, setInputUrlImg] = useState("")
+    const [inputIngredient, setInputIngredient] = useState("");
+    const [inputLabel, setInputLabel] = useState("");
+    const [inputUrlImg, setInputUrlImg] = useState("");
+    const [inputPrice, setInputPrice] = useState("");
 
     useEffect(() => {
         // setUserShops(data)
@@ -61,6 +62,7 @@ const ProfilePro = () => {
         .then(res => {
             console.log(res.data)
             setGlobalLoading(false)
+            setInput("");
             setSelectedStore(res.data)
         })
     }
@@ -70,16 +72,19 @@ const ProfilePro = () => {
         console.log("input", input)
         setGlobalLoading(true)
         let data = {
+            "url": inputUrlImg,
             "Name": input,
             "Ingredients": [],
-            "Price": "2.50",
+            "Price": inputPrice,
             "Labels": [],
             "Category": selectedCategory.name
         }
         axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops/" + selectedStore.ID + "/products", data)
         .then(res => {
             console.log(res.data)
-            setInput("")
+            setInput("");
+            setInputPrice("");
+            setInputUrlImg("");
             setGlobalLoading(false)
             setSelectedStore(res.data)
         })
@@ -90,13 +95,10 @@ const ProfilePro = () => {
         let data = {
             "ingredient": inputIngredient,
         }
-        console.log(selectedStore.ID)
-        console.log(selectedProduct.ID)
-        console.log()
         axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops/" + selectedStore.ID + "/products/" + selectedProduct.ID + "/ingredients", data)
         .then(res => {
             console.log(res.data)
-            setInput("")
+            setInputIngredient("")
             setGlobalLoading(false)
             setSelectedStore(res.data)
         })
@@ -108,6 +110,32 @@ const ProfilePro = () => {
         .then(res => {
             console.log(res.data)
             setInput("")
+            setGlobalLoading(false)
+            setSelectedStore(res.data)
+        })
+    }
+
+    const createLabel = () => {
+        setGlobalLoading(true)
+        let data = {
+            "label": inputLabel,
+        }
+        console.log("data", data, inputLabel)
+        axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops/" + selectedStore.ID + "/products/" + selectedProduct.ID + "/labels", data)
+        .then(res => {
+            console.log(res.data)
+            setInputLabel("")
+            setGlobalLoading(false)
+            setSelectedStore(res.data)
+        })
+    }
+
+    const deleteLabel = (label) => {
+        setGlobalLoading(true)
+        axios.delete("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops/" + selectedStore.ID + "/products/" + selectedProduct.ID + "/labels/" + label)
+        .then(res => {
+            console.log(res.data)
+            setInputLabel("")
             setGlobalLoading(false)
             setSelectedStore(res.data)
         })
@@ -143,7 +171,7 @@ const ProfilePro = () => {
         let ingredients = product.Ingredients.map(ingredient => <div className='data'>              <div className='txt'>  {ingredient}</div>
         <div className='logoWrapper'> <DeleteIcon onClick={() => deleteIngredient(ingredient)}/></div></div>)
         let labels = product.Labels.map(label => <div className='data'>              <div className='txt'>  {label}</div>
-        <div className='logoWrapper'> <DeleteIcon/></div></div>)
+        <div className='logoWrapper'> <DeleteIcon onClick={() => deleteLabel(label)}/></div></div>)
         return (
             <div>
                 <div className='inputWrapperBtn'>
@@ -160,7 +188,7 @@ const ProfilePro = () => {
                         <input value={inputLabel} onChange={(e) => setInputLabel(e.target.value)}   placeholder='Ajouter un label' className='input'/>
                     </div>
                     <div className='btnWrapper'>
-                        <button className='btn' ><AddCircleIcon/></button>
+                        <button className='btn' onClick={() => createLabel()} ><AddCircleIcon/></button>
                     </div>
                 </div>
                 {labels}
@@ -187,12 +215,14 @@ const ProfilePro = () => {
         )
         return (
             <div>
-                <div className='inputWrapperBtn'>
-                    <div className='inputWrapper'>
-                        <input onChange={(e) => setInput(e.target.value)} value={input}  placeholder='Créer un produit' className='input'/>
+                <div className='inputWrapperProductBtn'>
+                    <div className='inputWrapperProduct'>
+                        <input onChange={(e) => setInput(e.target.value)} value={input}  placeholder='Nom du produit' className='input'/>
+                        <input onChange={(e) => setInputUrlImg(e.target.value)} value={inputUrlImg} placeholder='Url du produit' className='input'/>
+                        <input onChange={(e) => setInputPrice(e.target.value)} value={inputPrice} placeholder='Prix du produit' className='input'/>
                     </div>
                     <div className='btnWrapper'>
-                        <button className='btn' onClick={() => createProduct()}><AddCircleIcon/></button>
+                        <button className='btn' onClick={() => createProduct()}>Créer un produit&nbsp;&nbsp;<AddCircleIcon/></button>
                     </div>
                 </div>
                 {products}
@@ -236,16 +266,28 @@ const ProfilePro = () => {
         setIsModifyStoreModalShown(true);
     }
 
+    const deleteStore = (storeId) => {
+        axios.delete("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/"+ localStorage.getItem("user_id")  +"/shops/"+ storeId)
+        .then(res => {
+            setUserShops(res.data)
+        })
+    }
+
     const mapUserStores = () => {
         return userShops.map(shop => 
+            <div className='storeAndDelete'>
             <div className='storeWrapper' onClick={() => onClickStore(shop)}>
+                                <div className='imgWrapper'>
+                    <img alt='img' className='img' src={shop.img}/>
+                </div>
                 <div className='name'>
                     {shop.name}
                 </div>
-                <div className='imgWrapper'>
-                    <img alt='img' className='img' src={shop.img}/>
-                </div>
             </div>
+                            <div className='deleteBtnWrapper'>
+                            <button className='deleteBtn' onClick={() => deleteStore(shop.ID)}>Supprimer cette boutique</button>
+                        </div>
+                        </div>
         )
     }
 
@@ -276,6 +318,7 @@ const ProfilePro = () => {
             "store": selectedType,
             "city": city,
             "address": storeAddress,
+            "url": inputUrlImg,
             "coordinates": [coordinates[0].toString(), coordinates[1].toString()]
         }
         axios.post("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("user_id") + "/shops", body)
@@ -346,7 +389,6 @@ const ProfilePro = () => {
                         <Input  className='inputSearchAddress' value={inputUrlImg} onChange={(e) => setInputUrlImg(e.target.value)} placeholder={"Ex: https://www.petitscommerces.fr/wp-content/uploads/2015/12/Epicerie-du-terroir-Epicerie-fine-75018-boutique-petitscommerces.fr_-scaled.jpg"} />
                     </div>
                     <div >
-                    {AddressesMap()}
                     </div>
                  
                 </div>

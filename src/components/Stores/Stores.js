@@ -7,7 +7,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import {  changeSelectedStore } from '../Redux/Store';
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {Carousel} from 'antd'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import 'swiper/swiper-bundle.min.css'
@@ -113,22 +112,6 @@ const Stores = () => {
         borderRadius: "10px"
     }
 
-    const modalCarousel = () => {
-        return (
-            <Carousel style={{}}>
-            <div >
-                <img alt='img' style={contentStyle}  src={"https://www.conflans-sainte-honorine.fr/wp-content/uploads/2017/07/Boulangerie-illustration-800x435.jpg"}/>
-            </div>
-            <div >
-                <img alt='img' style={contentStyle} src={"https://www.youschool.fr/wp-content/uploads/2019/02/reprendre-boulangerie-youschool.jpg"}/>
-            </div>
-            <div >
-                <img alt='img' style={contentStyle} src={"https://media-cdn.tripadvisor.com/media/photo-s/1c/7c/dd/df/boulangerie-patisserie.jpg"}/>
-            </div>
-            </Carousel>
-        )
-    }
-
 
     const mapSubProducts = () => {
         if (selectedStore === "")
@@ -176,7 +159,14 @@ const Stores = () => {
             return
         }
         return ingredients.map (ingredient => 
-            <div style={{display: "flex", marginLeft: "30%", padding: "5px"}}><ArrowCircleRightIcon/>{ingredient}</div>)
+            <div className='ingredientAndLabelWrapper'>
+                <div className='logo'>
+                    <ArrowCircleRightIcon/>
+                </div>
+                <div className='txt'>
+                    {ingredient}
+                </div>
+            </div>)
     }
 
     const mapLabels = (labels) => {
@@ -184,13 +174,20 @@ const Stores = () => {
             return
         }
         return labels.map (label => 
-            <div style={{display: "flex", marginLeft: "30%", padding: "5px"}}><ArrowCircleRightIcon/>{label}</div>)
+            <div className='ingredientAndLabelWrapper'>
+            <div className='logo'>
+                <ArrowCircleRightIcon/>
+            </div>
+            <div className='txt'>
+                {label}
+            </div>
+        </div>)
     }
 
     const productPage = () => {
         return (
             <Modal show={showUpModal} onHide={handleCloseUp} style={{width: "100%", minHeight: "100vh", zIndex: 9999, }}>
-            <Modal.Body>
+           
                 <div>
                     <div className='headerModal'>
                         <div style={{width: "20%", display: "flex",justifyContent: "center"}} onClick={() => handleCloseUp()}>
@@ -200,12 +197,12 @@ const Stores = () => {
                         </div>
                         <div  style={{width: "20%", display: "flex",justifyContent: "center"}}>
                             <div className='headerModalBtnClose'>
-                                <FavoriteIcon onClick={() => addToFavorites(selectedStore, "favorite_food")} style={{color: "red"}}/>
+                                <FavoriteIcon onClick={() => addToFavorites(selectedStore, "favorite_food")} style={{color: "red", cursor: "pointer"}}/>
                             </div>
                         </div>
                     </div>
                 </div>
-            </Modal.Body>
+           
             <img alt='img' src={selectedProduct.Img}/>
             <div className='modalUpperWrapper'>
                 <div className='modalUpperWrapperHeader'>
@@ -228,20 +225,19 @@ const Stores = () => {
     }
 
     const addToFavorites = (data, typeOfFavorite) => {
-   
         if (!localStorage.getItem("email")) {
-            console.log("you must e logged")
+            console.log("you must be logged")
             return
         }
         if (typeOfFavorite === "favorite_store") {
-            axios.patch("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("email"), {"favorite_store": data.name, "img": data.img})
+            axios.patch("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("email") + "/favorites", {"favorite_store": data.name, "img": data.img})
             .then(res => {
                 console.log(res.data)
             })
         }
         else {
-            console.log("sdfsdfsfdsf",data.ID, data.img)
-            axios.patch("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("email"), {"favorite_food": selectedProduct.Name, "store_id": data.ID, "img": data.img})
+            console.log("sdfsdfsfdsf",data.ID, data.img);
+            axios.patch("https://f2zjurxgkg.execute-api.eu-central-1.amazonaws.com/Prod/users/" + localStorage.getItem("email") + "/favorites", {"favorite_food": selectedProduct.Name, "store_id": data.ID, "img": selectedProduct.Img})
             .then(res => {
                 console.log(res.data)
             })
@@ -253,7 +249,7 @@ const Stores = () => {
             <div>
             {productPage()}
             <Modal show={show} onHide={handleClose} style={{width: "100%", minHeight: "100vh"}}>
-                <Modal.Body>
+         
                     <div>
                         <div className='headerModal'>
                             <div style={{width: "20%", display: "flex",justifyContent: "center"}} onClick={() => handleClose()}>
@@ -266,13 +262,13 @@ const Stores = () => {
                             </div>
                             <div  style={{width: "20%", display: "flex",justifyContent: "center"}}>
                                 <div className='headerModalBtnClose'>
-                                    <FavoriteIcon style={{color: "red"}} onClick={() => addToFavorites(selectedStore, "favorite_store")}/>
+                                    <FavoriteIcon style={{color: "red", cursor: "pointer"}} onClick={() => addToFavorites(selectedStore, "favorite_store")}/>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </Modal.Body>
-                {modalCarousel()}
+           
+             
                 <div className='categoriesMenuModal'>
                     {mapSubProducts()}
                 </div>
@@ -281,7 +277,7 @@ const Stores = () => {
                 </div>
             </Modal>
             </div>
-            <div className='StoreWrapperHeader' style={calcMargin()}>
+            <div className='StoreWrapperHeader'>
                 <div className='storeSearch'>  
                     <div className='storeInput'>
                         <input className='inputStoreWrapper' placeholder="Rechercher une boutique..." onChange={(e)=>setInputValue(e.target.value)}/>

@@ -4,6 +4,7 @@ import firebase from "./services/firbaseService";
 import Stores from "./components/Stores/Stores";
 import LoginAndregisterWrapper from "./components/LoginAndRegister/LoginAndRegisterWrapper";
 import { useSelector } from 'react-redux';
+import MapComponent from './components/Map/MapComponent'
 import TabBar from "./components/TabBar/TabBar";
 import Favorites from './components/Favorites/Favorites'
 import { storeSelectedMenu, storeSelectedStore } from './components/Redux/Store';
@@ -31,9 +32,9 @@ const App = () => {
   }
   if (selectedMenuRedux === 1) {
     return (
-      <div className="App">
     
-        </div>
+      <MapComponent/>
+  
     )
   }
 
@@ -59,8 +60,9 @@ const App = () => {
   // }
 }
 
+
   return (
-    <div className="App">
+    <div>
       {handlePages()}
     {
       selectedStore === "" && (  <TabBar/>)

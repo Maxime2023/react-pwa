@@ -29,9 +29,9 @@
 
   .allStores{
 
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-gap: 10px;
+    // display: grid;
+    // grid-template-columns: repeat(1, 1fr);
+    // grid-gap: 10px;
   }
   .StoreWrapperHeaderFixer {
 
@@ -159,6 +159,7 @@
   }
   .storeWrapper {
     cursor: pointer;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
   .storeInput{
     width:70%;
@@ -183,18 +184,20 @@
   .storeSearch{
     display:flex;
     padding: 10px;
+
   }
 
   .allStores{
 
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     grid-gap: 10px;
   }
   .StoreWrapperHeaderFixer {
 
   }
   .StoreWrapperHeader {
+    
     border-radius: 10px;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
     display: flex;
@@ -236,6 +239,7 @@
     flex-direction: row;
     height: 40px;
     line-height: 40px;
+    margin-bottom: 20px;
   }
 
   .headerModalBtnClose {
@@ -257,10 +261,32 @@
     text-align: center;
     padding: 20px;
   }
+  .ingredientAndLabelWrapper {
+
+    padding: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin-left: 25%;
+    .logo {
+      width: 20%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+    }
+    .txt {
+      display: flex;
+      width: 80%;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 
   .categoriesModal {
     flex-direction: row;
     text-align: center;
+    cursor: pointer;
   }
 
   .categoriesModalSelected {
@@ -268,6 +294,7 @@
     text-align: center;
     color: red;
     border-bottom: 2px solid red;
+    cursor: pointer;
   }
 
   .productModalWrapper {
@@ -279,6 +306,7 @@
     display: flex;
     height: 80px;
     line-height: 80px;
+    cursor: pointer;
   }
 
   .modalUpperWrapper {

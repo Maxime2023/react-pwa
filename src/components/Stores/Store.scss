@@ -1,9 +1,50 @@
-.storeWrapper
-{
-    padding: 20px;
-    margin:20px;
-    border-radius: 20px;
-    color:white;
-    font-weight: bold;
-
+@media only screen and (max-width: 750px) {
+    .storeWrapper
+    {
+        font-weight: bold;
+        .nameWrapper {
+            padding: 5px;
+            color: black;
+            text-align: left;
+        }
+        .adressWrapper {
+            color: darkgray;
+            text-align: left;
+            padding: 5px;
+        }
+        .imgWrapper {
+            .img {
+                height: 250px;
+                // width: 100%;
+            }
+        
+        }
+    }
 }
+@media only screen and (min-width: 750px) {
+    .storeWrapper
+    {
+        padding: 20px;
+        margin:20px;
+        // border-radius: 20px;
+        font-weight: bold;
+        .nameWrapper {
+            padding: 5px;
+            color: black;
+            text-align: left;
+        }
+        .adressWrapper {
+            color: darkgray;
+            text-align: left;
+            padding: 5px;
+        }
+        .imgWrapper {
+            .img {
+                height: 250px;
+                // width: 100%;
+            }
+        
+        }
+    }
+}
+
