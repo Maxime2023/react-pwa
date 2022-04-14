@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import './Products.css';
 import { useSelector } from 'react-redux';
 import { storeSelectedCategory, storeSelectedStore } from '../../Redux/Store';
-import { useDispatch } from 'react-redux';
-const Products = (props) => {
+const Products = () => {
     const selectedCategory = useSelector(storeSelectedCategory);
     const selectedStore = useSelector(storeSelectedStore)
-    // console.log("selectedCategoryselectedCategory",selectedStore)
-    const dispatch = useDispatch();
+
 
     const mapAllProducts = () => {
         const {products} = selectedStore ;

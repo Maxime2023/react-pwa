@@ -1,0 +1,64 @@
+@media screen and (min-width: 850px) {
+    .FavoritesWrapperNotLogged {
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+        align-items: center;
+    }
+    .connectBtn {
+        background-color: #ff9580;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+        width: 100%;
+    }
+    .FavoritesNotLoggedT1 {
+        font-size: 28px;
+        padding: 20px;
+    }
+    
+    .FavoritesNotLoggedT2 {
+        font-size: 16px;
+        padding: 20px;
+    }
+    
+    .FavoritesNotLogged {
+        width: 40%;
+        box-shadow: rgb(0 0 0 / 24%) 0px 3px 8px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
+    }
+}
+
+@media screen and (max-width: 850px) {
+    .FavoritesWrapperNotLogged {
+        display: flex;
+        justify-content: center;
+        min-height: 100vh;
+        align-items: center;
+    }
+    .connectBtn {
+        background-color: #ff9580;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    .FavoritesNotLoggedT1 {
+        font-size: 28px;
+        padding: 20px;
+    }
+    
+    .FavoritesNotLoggedT2 {
+        font-size: 16px;
+        padding: 20px;
+    }
+    
+    .FavoritesNotLogged {
+        width: 80%;
+    }
+}

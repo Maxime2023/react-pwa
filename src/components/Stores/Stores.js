@@ -3,10 +3,8 @@ import Store from "./Store";
 import './Stores.scss';
 import axios from "axios";
 import { useDispatch } from 'react-redux';
-import {data} from "./Data.js"
-import { useSelector } from 'react-redux';
 import SearchIcon from '@mui/icons-material/Search';
-import {  changeSelectedStore, storeSelectedMenu } from '../Redux/Store';
+import {  changeSelectedStore } from '../Redux/Store';
 import Modal from "react-bootstrap/Modal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import {Carousel} from 'antd'
@@ -20,9 +18,7 @@ const Stores = () => {
     const [inputValue, setInputValue] = useState("");
     const [stores, setStores] = useState([]);
     const [selectedStore, setSelectedStore] = useState("");
-    const [addresses, setAddresses] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState("");
-    const [selectedAddress, setSelectedAdress] = useState("Toutes les boutiques");
     const [loading, setLoading] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState("");
     const dispatch = useDispatch();
@@ -45,12 +41,6 @@ const Stores = () => {
     const handleCloseUp = () => {
         setShowUpModal(false);
     }
-    const handleShow = () =>  setShow(true);
-    const selectedMenuRedux = useSelector(storeSelectedMenu);
-
-    const handleChangeSelector = (value) => {
-        setSelectedAdress(value)
-    }
 
     const searchStores = () => {
        setLoading(true);
@@ -59,7 +49,6 @@ const Stores = () => {
                res=>{
                    console.log("axio.getStores", res.data)
                    setStores(res.data.stores);
-                   setAddresses(res.data.addresses);
                    setLoading(false);
                }
            )
@@ -128,13 +117,13 @@ const Stores = () => {
         return (
             <Carousel style={{}}>
             <div >
-                <img style={contentStyle}  src={"https://www.conflans-sainte-honorine.fr/wp-content/uploads/2017/07/Boulangerie-illustration-800x435.jpg"}/>
+                <img alt='img' style={contentStyle}  src={"https://www.conflans-sainte-honorine.fr/wp-content/uploads/2017/07/Boulangerie-illustration-800x435.jpg"}/>
             </div>
             <div >
-                <img style={contentStyle} src={"https://www.youschool.fr/wp-content/uploads/2019/02/reprendre-boulangerie-youschool.jpg"}/>
+                <img alt='img' style={contentStyle} src={"https://www.youschool.fr/wp-content/uploads/2019/02/reprendre-boulangerie-youschool.jpg"}/>
             </div>
             <div >
-                <img style={contentStyle} src={"https://media-cdn.tripadvisor.com/media/photo-s/1c/7c/dd/df/boulangerie-patisserie.jpg"}/>
+                <img alt='img' style={contentStyle} src={"https://media-cdn.tripadvisor.com/media/photo-s/1c/7c/dd/df/boulangerie-patisserie.jpg"}/>
             </div>
             </Carousel>
         )
@@ -169,7 +158,7 @@ const Stores = () => {
         return products.map(product  => 
         <div className='productModalWrapper' onClick={() => selectProduct(product)}>
             <div style={{width: "20%"}}>
-                <img style={{height: "60px", width: "60px", borderRadius: "60px", marginLeft: "20px" }} src={product.Img}/>
+                <img alt='img' style={{height: "60px", width: "60px", borderRadius: "60px", marginLeft: "20px" }} src={product.Img}/>
             </div>
             <div style={{fontSize: "16px", width: "50%", textAlign: "center"}}>
             {product.Name}
@@ -217,7 +206,7 @@ const Stores = () => {
                     </div>
                 </div>
             </Modal.Body>
-            <img src={selectedProduct.Img}/>
+            <img alt='img' src={selectedProduct.Img}/>
             <div className='modalUpperWrapper'>
                 <div className='modalUpperWrapperHeader'>
                     <div >
@@ -303,9 +292,6 @@ const Stores = () => {
                 </button>
                     </div>
                 </div>
-                {/* <div className='storesSelector'>
-                {handleSelect()}
-                </div>         */}
             </div>
             <div className='StoresWrapper'>{handleLoading()}</div>
         </div>

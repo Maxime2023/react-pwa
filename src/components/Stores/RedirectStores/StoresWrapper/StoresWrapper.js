@@ -1,12 +1,10 @@
 import React, {useRef, useEffect} from 'react'
 import './StoresWrapper.css';
-import { Swiper, SwiperSlide,  } from "swiper/react";
 import 'swiper/swiper-bundle.min.css'
 import 'swiper/swiper.min.css'
 import Stores from '../../Stores';
-import StoreResult from '../../StoreResult';
 import { useSelector } from 'react-redux';
-import { changeStatusPage, changeSelectedStore, storeSelectedMenu, storeSelectedStore, changeSelectedMenu, changeSelectedCategory, storeStatusPage } from '../../../Redux/Store';
+import { storeSelectedStore } from '../../../Redux/Store';
 const StoreWrapper = (props) => {
     const selectedStore = useSelector(storeSelectedStore);
     const swiperRef = useRef(null);

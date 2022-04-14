@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, notification, Radio } from 'antd';
+import { Form, notification, Radio } from 'antd';
 import './LoginAndRegisterWrapper.scss'
 import axios from 'axios';
 import Profile from '../Profile/Profile';

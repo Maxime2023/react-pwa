@@ -1,18 +1,17 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import {data} from './Data'
 import './ProfilePro.scss'
 import {Input} from "antd"
 import './ProfilePro.scss'
 import Modal from "react-bootstrap/Modal";
-import { Select, notification } from 'antd';
-import Store from '../../Stores/Store'
+import { Select } from 'antd';
 import 'antd/dist/antd.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import { LoadingOutlined,} from '@ant-design/icons';
 import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-
+import LogoutIcon from '@mui/icons-material/Logout';
 const { Option } = Select;
 
 const ProfilePro = () => {
@@ -39,6 +38,7 @@ const ProfilePro = () => {
     const [input, setInput] = useState("");
     const [inputIngredient, setInputIngredient] = useState("")
     const [inputLabel, setInputLabel] = useState("")
+    const [inputUrlImg, setInputUrlImg] = useState("")
 
     useEffect(() => {
         // setUserShops(data)
@@ -243,7 +243,7 @@ const ProfilePro = () => {
                     {shop.name}
                 </div>
                 <div className='imgWrapper'>
-                    <img className='img' src={shop.img}/>
+                    <img alt='img' className='img' src={shop.img}/>
                 </div>
             </div>
         )
@@ -340,6 +340,16 @@ const ProfilePro = () => {
                     </div>
                  
                 </div>
+                <div className='dataWrapperAddShop'>
+                    Entrez l'url de votre boutique : 
+                    <div className='inputWrapper'>
+                        <Input  className='inputSearchAddress' value={inputUrlImg} onChange={(e) => setInputUrlImg(e.target.value)} placeholder={"Ex: https://www.petitscommerces.fr/wp-content/uploads/2015/12/Epicerie-du-terroir-Epicerie-fine-75018-boutique-petitscommerces.fr_-scaled.jpg"} />
+                    </div>
+                    <div >
+                    {AddressesMap()}
+                    </div>
+                 
+                </div>
                 {/* {mapAddresses()} */}
                 <div className='dataWrapperAddShop'>
                     Selectionnez le type de votre boutique:
@@ -383,6 +393,11 @@ const ProfilePro = () => {
         )
     }
 
+    const logout = () => {
+        localStorage.clear()
+        window.location.reload()
+    }
+
     return (
         <div className='ProfileProWrapper'>
             {addShopModal()}
@@ -391,8 +406,8 @@ const ProfilePro = () => {
                 <button className='AddStoreBtnProfile' onClick={() => setIsAddStoreModalShown(true)}>
                     Ajouter une boutique&nbsp;&nbsp;<AddCircleIcon/>
                 </button>
-                <button className='AddStoreBtnProfile' onClick={() => setIsAddStoreModalShown(true)}>
-                    Se deconnecter&nbsp;&nbsp;<AddCircleIcon/>
+                <button className='AddStoreBtnProfile' onClick={() => logout()}>
+                    Se deconnecter&nbsp;&nbsp;<LogoutIcon/>
                 </button>
             </div>
 

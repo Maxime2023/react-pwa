@@ -1,34 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect } from "react";
 import './App.css';
-import { Link, Route, BrowserRouter, Switch } from "react-router-dom";
-import MainPage from "./components/MainPage/MainPage"
 import firebase from "./services/firbaseService";
 import Stores from "./components/Stores/Stores";
-// import Map from "./components/Map/Map"
 import LoginAndregisterWrapper from "./components/LoginAndRegister/LoginAndRegisterWrapper";
-import { Carousel } from 'antd';
-import { storeStatusPage } from "./components/Redux/Store";
 import { useSelector } from 'react-redux';
-import backMainPage from './images/backMainPage.png'
 import TabBar from "./components/TabBar/TabBar";
-import { useDispatch } from 'react-redux';
 import Favorites from './components/Favorites/Favorites'
-import News from './components/News/News';
-import { changeStatusPage, storeSelectedMenu, storeSelectedStore, changeSelectedMenu, changeSelectedCategory } from './components/Redux/Store';
-import StoreWrapper from "./components/Stores/RedirectStores/StoresWrapper/StoresWrapper";
+import { storeSelectedMenu, storeSelectedStore } from './components/Redux/Store';
 
 const App = () => {
-  const slider = useRef();
   const selectedMenuRedux = useSelector(storeSelectedMenu);
   const selectedStore = useSelector(storeSelectedStore)
-  // const swiper = document.querySelector('.swiper').swiper;
-
-  // const swiperRef = useRef(null);
-  // swiperRef.current?.swiper.slideTo(selectedMenuRedux);
-  const dispatch = useDispatch();
   useEffect(() => {
-   
-    // slider.current.goTo(selectedMenuRedux);
     const message = firebase.messaging();
     message.requestPermission().then(() => {
       return message.getToken()
@@ -49,7 +32,7 @@ const App = () => {
   if (selectedMenuRedux === 1) {
     return (
       <div className="App">
-        <News/>
+    
         </div>
     )
   }

@@ -1,14 +1,12 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import { useEffect } from "react";
+import React from 'react'
 import './TabBar.scss'
 import { useDispatch } from 'react-redux';
-import { changeStatusPage, changeSelectedStore, storeSelectedMenu, storeSelectedStore, changeSelectedMenu, changeSelectedCategory, storeStatusPage } from '../Redux/Store';
+import { storeSelectedMenu, changeSelectedMenu } from '../Redux/Store';
 import { useSelector } from 'react-redux';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import AccountBoxIcon from '@mui/icons-material/AccountBox';
-import ArticleIcon from '@mui/icons-material/Article';
 import StarIcon from '@mui/icons-material/Star';
+import MapIcon from '@mui/icons-material/Map';
 const TabBar = () => {
     const updateMenu = (number) => {
         dispatch(changeSelectedMenu(number))
@@ -18,8 +16,6 @@ const TabBar = () => {
         let margin = (vw - 40) ;
         return margin.toString() + "px"
     }
-
-
 
     const dispatch = useDispatch();
     const selectedMenuRedux = useSelector(storeSelectedMenu);
@@ -31,7 +27,7 @@ const TabBar = () => {
                         < StorefrontIcon style={selectedMenuRedux === 0 ? {color: "#ff9580"} : null}/>
                     </div>
                     <div onClick={() => updateMenu(1)} >
-                        <ArticleIcon style={selectedMenuRedux === 1 ? {color: "#ff9580"} : null}/>
+                        <MapIcon style={selectedMenuRedux === 1 ? {color: "#ff9580"} : null}/>
                     </div>
                     <div onClick={() => updateMenu(2)} >
                         < AccountBoxIcon style={selectedMenuRedux === 2 ? {color: "#ff9580"} : null}/>

@@ -1,18 +1,15 @@
 import React from 'react'
-import './Store.css';
+import './Store.scss';
 
 const Store = (props) => {
     const {data} = props;
-    const handleStoresColor = () => {
-        let bgColors = ["#ded8ff", "#c4f0f0", "#ffdbd2"]
-        let rand = Math.floor(Math.random() * (bgColors.length));
-        return bgColors[rand]
-    }
+    console.log(data)
  
     return(
-        <div className='storeWrapper' style={{backgroundColor: handleStoresColor()}}>
-             <div className='header'>{data.name}</div>
-            <div><img alt="Icon" style={{height:"50px"}}src={data.img} /></div>
+        <div className='storeWrapper'>
+            <div className='imgWrapper'><img src={data.img}/></div>
+             {/* <div className='header'>{data.name}</div>
+            <div><img alt="Icon" style={{height:"50px"}}src={data.img} /></div> */}
         </div>
         
     );

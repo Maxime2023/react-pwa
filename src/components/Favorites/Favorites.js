@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import React from "react";
 import { useDispatch } from 'react-redux';
-import './Favorites.css'
+import './Favorites.scss'
 
-import { changeStatusPage, changeSelectedStore, storeSelectedMenu, storeSelectedStore, changeSelectedMenu, changeSelectedCategory, storeStatusPage } from '../Redux/Store';
+import {  changeSelectedMenu } from '../Redux/Store';
 const Favorites = () => {
   const dispatch = useDispatch();
   if (localStorage.getItem("token")) {
@@ -21,9 +21,9 @@ const Favorites = () => {
           <div className="FavoritesNotLoggedT2">
             Connectez vous pour acceder à vos favoris
           </div >
-          <div className="connectBtn" onClick={() => dispatch(changeSelectedMenu(2))}>
+          <button className="connectBtn" onClick={() => dispatch(changeSelectedMenu(2))}>
             Se connecter
-            </div>
+            </button>
         </div>
       </div>
     )

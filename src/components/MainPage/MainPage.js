@@ -1,15 +1,11 @@
-import React, { useState } from 'react'
-import { useEffect } from "react";
-import './MainPage.css'
-import backMainPage from '../../images/backMainPage.png'
+import React from 'react';
+import './MainPage.css';
+import backMainPage from '../../images/backMainPage.png';
 import { useDispatch } from 'react-redux';
 import { changeStatusPage } from '../Redux/Store';
 const MainPage = () => {
     const dispatch = useDispatch();
 
-    const handleClick = () => {
-        
-    }
     return (
         <div className='MainPageWrapper' style={{backgroundImage: `url(${backMainPage})`}}>
             <div className='btnDiscoverStoresWrapper'>
