@@ -190,12 +190,12 @@ const Stores = () => {
            
                 <div>
                     <div className='headerModal'>
-                        <div style={{width: "20%", display: "flex",justifyContent: "center"}} onClick={() => handleCloseUp()}>
+                        <div className='BtnCloseWrapper' onClick={() => handleCloseUp()}>
                             <div className='headerModalBtnClose'>
                                 <KeyboardArrowUpIcon/>
                             </div>
                         </div>
-                        <div  style={{width: "20%", display: "flex",justifyContent: "center"}}>
+                        <div className='BtnCloseWrapper'>
                             <div className='headerModalBtnClose'>
                                 <FavoriteIcon onClick={() => addToFavorites(selectedStore, "favorite_food")} style={{color: "red", cursor: "pointer"}}/>
                             </div>
@@ -252,15 +252,15 @@ const Stores = () => {
          
                     <div>
                         <div className='headerModal'>
-                            <div style={{width: "20%", display: "flex",justifyContent: "center"}} onClick={() => handleClose()}>
+                            <div className='BtnCloseWrapper' onClick={() => handleClose()}>
                                 <div className='headerModalBtnClose'>
                                     <KeyboardArrowUpIcon/>
                                 </div>
                             </div>
-                            <div  style={{width: "60%", textAlign: "center"}}>
+                            <div  className='title'>
                                 {selectedStore.name}
                             </div>
-                            <div  style={{width: "20%", display: "flex",justifyContent: "center"}}>
+                            <div  className='BtnCloseWrapper'>
                                 <div className='headerModalBtnClose'>
                                     <FavoriteIcon style={{color: "red", cursor: "pointer"}} onClick={() => addToFavorites(selectedStore, "favorite_store")}/>
                                 </div>

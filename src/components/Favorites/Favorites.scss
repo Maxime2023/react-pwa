@@ -48,6 +48,20 @@
 }
 
 @media screen and (max-width: 850px) {
+    .FavoritesWrapper {
+        padding: 60px;
+        .title {
+            font-size: 22px;
+        }
+        .btnDelete {
+            background-color: red;
+            width: 100%;
+            border: none;
+            padding: 5px;
+            background-color: #ff9580;
+            color: white;
+        }
+    }
     .FavoritesWrapperNotLogged {
         display: flex;
         justify-content: center;
@@ -61,6 +75,7 @@
         padding: 10px;
         border-radius: 10px;
         cursor: pointer;
+        width: 100%;
     }
     .FavoritesNotLoggedT1 {
         font-size: 28px;
@@ -73,6 +88,10 @@
     }
     
     .FavoritesNotLogged {
-        width: 80%;
+        width: 90%;
+        box-shadow: rgb(0 0 0 / 24%) 0px 3px 8px;
+        background-color: white;
+        padding: 20px;
+        border-radius: 20px;
     }
 }

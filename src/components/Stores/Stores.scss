@@ -1,6 +1,11 @@
 @media only screen and (max-width: 750px) {
   .storeWrapper {
     cursor: pointer;
+    padding: 20px;
+    width: 90%;
+    margin-left: 5%;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    border-radius: 10px;
   }
   .storeInput{
     width:70%;
@@ -35,18 +40,28 @@
   }
   .StoreWrapperHeaderFixer {
 
+
   }
   .StoreWrapperHeader {
-    border-radius: 10px;
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 50%;
-    margin-left: 25%;
-    padding: 20px;
+    // border-radius: 10px;
+    // box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    // display: flex;
+    // justify-content: center;
+    // align-items: center;
+    // width: 90%;
+    // margin-left: 5%;
+    // margin-bottom: 20px;
+
     .storeSearch {
-      width: 100%;
+      width: 90%;
+      box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+      margin: 20px;
+      border-radius: 10px;
     }
   }
 
@@ -76,8 +91,21 @@
   .headerModal {
     display: flex;
     flex-direction: row;
-    height: 40px;
+    height: 80px;
     line-height: 40px;
+    .BtnCloseWrapper {
+
+      width: 20%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .title {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 60%;
+    }
   }
 
   .headerModalBtnClose {
